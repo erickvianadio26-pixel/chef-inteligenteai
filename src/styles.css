@@ -39,39 +39,33 @@
   --font-sans: var(--font-sans);
 }
 
-:root {
+:root,
+[data-palette="forest"] {
   --radius: 1.25rem;
 
-  /* Artisanal kitchen: deep forest green, warm cream, tomato red, mustard gold */
+  /* Floresta & Tomate */
   --background: oklch(0.975 0.015 95);
   --foreground: oklch(0.22 0.04 160);
-
   --card: oklch(0.99 0.01 95);
   --card-foreground: oklch(0.22 0.04 160);
   --popover: oklch(0.99 0.01 95);
   --popover-foreground: oklch(0.22 0.04 160);
-
   --primary: oklch(0.52 0.14 155);
   --primary-foreground: oklch(0.98 0.01 95);
-
   --secondary: oklch(0.94 0.025 95);
   --secondary-foreground: oklch(0.28 0.05 160);
-
   --muted: oklch(0.93 0.018 95);
   --muted-foreground: oklch(0.48 0.03 140);
-
   --accent: oklch(0.90 0.08 85);
   --accent-foreground: oklch(0.26 0.05 160);
-
   --spice: oklch(0.58 0.20 30);
   --herb: oklch(0.60 0.10 150);
   --tomato: oklch(0.58 0.20 30);
   --mustard: oklch(0.78 0.16 85);
   --forest: oklch(0.35 0.10 160);
-
+  --accent-soft: oklch(0.95 0.06 85);
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(0.99 0.01 95);
-
   --border: oklch(0.89 0.025 90);
   --input: oklch(0.92 0.02 90);
   --ring: oklch(0.52 0.14 155);
@@ -79,6 +73,88 @@
   --font-display: "Playfair Display", ui-serif, Georgia, serif;
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
 }
+
+[data-palette="terracotta"] {
+  /* Terracota & Sálvia */
+  --background: oklch(0.97 0.018 70);
+  --foreground: oklch(0.24 0.04 40);
+  --card: oklch(0.99 0.012 75);
+  --card-foreground: oklch(0.24 0.04 40);
+  --popover: oklch(0.99 0.012 75);
+  --popover-foreground: oklch(0.24 0.04 40);
+  --primary: oklch(0.56 0.16 40);
+  --primary-foreground: oklch(0.99 0.01 80);
+  --secondary: oklch(0.93 0.03 70);
+  --secondary-foreground: oklch(0.30 0.05 40);
+  --muted: oklch(0.93 0.022 70);
+  --muted-foreground: oklch(0.48 0.04 50);
+  --accent: oklch(0.88 0.08 70);
+  --accent-foreground: oklch(0.28 0.05 40);
+  --tomato: oklch(0.56 0.16 40);
+  --mustard: oklch(0.74 0.13 75);
+  --forest: oklch(0.45 0.08 145);
+  --accent-soft: oklch(0.94 0.06 70);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.99 0.01 80);
+  --border: oklch(0.88 0.025 70);
+  --input: oklch(0.91 0.022 70);
+  --ring: oklch(0.56 0.16 40);
+}
+
+[data-palette="mustard"] {
+  /* Mostarda & Borgonha */
+  --background: oklch(0.97 0.025 90);
+  --foreground: oklch(0.24 0.05 50);
+  --card: oklch(0.99 0.018 90);
+  --card-foreground: oklch(0.24 0.05 50);
+  --popover: oklch(0.99 0.018 90);
+  --popover-foreground: oklch(0.24 0.05 50);
+  --primary: oklch(0.42 0.14 25);
+  --primary-foreground: oklch(0.98 0.01 90);
+  --secondary: oklch(0.93 0.035 90);
+  --secondary-foreground: oklch(0.30 0.06 50);
+  --muted: oklch(0.93 0.028 90);
+  --muted-foreground: oklch(0.48 0.04 60);
+  --accent: oklch(0.86 0.10 90);
+  --accent-foreground: oklch(0.28 0.06 50);
+  --tomato: oklch(0.42 0.14 25);
+  --mustard: oklch(0.72 0.16 80);
+  --forest: oklch(0.40 0.08 130);
+  --accent-soft: oklch(0.94 0.08 90);
+  --destructive: oklch(0.50 0.20 25);
+  --destructive-foreground: oklch(0.99 0.01 90);
+  --border: oklch(0.88 0.035 85);
+  --input: oklch(0.91 0.030 85);
+  --ring: oklch(0.42 0.14 25);
+}
+
+[data-palette="olive"] {
+  /* Azeitona & Páprica */
+  --background: oklch(0.97 0.020 105);
+  --foreground: oklch(0.22 0.04 130);
+  --card: oklch(0.99 0.014 100);
+  --card-foreground: oklch(0.22 0.04 130);
+  --popover: oklch(0.99 0.014 100);
+  --popover-foreground: oklch(0.22 0.04 130);
+  --primary: oklch(0.48 0.10 125);
+  --primary-foreground: oklch(0.98 0.01 100);
+  --secondary: oklch(0.93 0.030 105);
+  --secondary-foreground: oklch(0.28 0.05 130);
+  --muted: oklch(0.93 0.022 105);
+  --muted-foreground: oklch(0.48 0.04 120);
+  --accent: oklch(0.88 0.08 95);
+  --accent-foreground: oklch(0.26 0.05 130);
+  --tomato: oklch(0.55 0.19 35);
+  --mustard: oklch(0.74 0.15 90);
+  --forest: oklch(0.36 0.08 130);
+  --accent-soft: oklch(0.94 0.07 95);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.99 0.01 100);
+  --border: oklch(0.88 0.028 100);
+  --input: oklch(0.91 0.025 100);
+  --ring: oklch(0.48 0.10 125);
+}
+
 
 .dark {
   --background: oklch(0.18 0.03 160);
