@@ -1,9 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+
+const DEVICE_ID_RE = /^[a-zA-Z0-9-]{8,64}$/;
 
 const InputSchema = z.object({
   ingredients: z.string().min(2).max(2000),
-  restrictions: z.array(z.string()).max(10).default([]),
+  restrictions: z.array(z.string().max(40)).max(10).default([]),
+  deviceId: z.string().regex(DEVICE_ID_RE),
 });
 
 const RecipeSchema = z.object({
