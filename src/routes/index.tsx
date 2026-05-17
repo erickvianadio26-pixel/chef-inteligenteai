@@ -151,6 +151,9 @@ function Index() {
           <span className="flex items-center gap-1.5 text-sm font-semibold text-foreground/80">
             Histórico
           </span>
+          <div className="ml-auto">
+            <PaletteSwitcher />
+          </div>
         </header>
 
         <main className="px-4 pb-24 pt-8 sm:pt-14">
