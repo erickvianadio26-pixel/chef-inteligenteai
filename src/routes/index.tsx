@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { ChefHat, Sparkles, Clock, Users, Flame, Leaf, Loader2 } from "lucide-react";
+import { ChefHat, Sparkles, Clock, Users, Flame, Leaf, Loader2, AlertCircle } from "lucide-react";
 import { generateRecipes, type Recipe } from "@/lib/recipes.functions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
