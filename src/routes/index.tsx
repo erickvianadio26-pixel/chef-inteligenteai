@@ -12,6 +12,14 @@ import {
   Loader2,
   AlertCircle,
   History as HistoryIcon,
+  UtensilsCrossed,
+  CookingPot,
+  Salad,
+  Soup,
+  Zap,
+  Search,
+  ArrowRight,
+  Carrot,
 } from "lucide-react";
 import {
   generateRecipes,
@@ -46,11 +54,11 @@ export const Route = createFileRoute("/")({
 });
 
 const RESTRICTIONS = [
-  { id: "Vegano", icon: Leaf },
-  { id: "Vegetariano", icon: Leaf },
-  { id: "Sem Glúten", icon: Flame },
-  { id: "Sem Lactose", icon: Flame },
-  { id: "Low Carb", icon: Flame },
+  { id: "Vegano", icon: Leaf, color: "bg-emerald-100 text-emerald-800 border-emerald-200" },
+  { id: "Vegetariano", icon: Salad, color: "bg-green-100 text-green-800 border-green-200" },
+  { id: "Sem Glúten", icon: CookingPot, color: "bg-amber-100 text-amber-800 border-amber-200" },
+  { id: "Sem Lactose", icon: Soup, color: "bg-sky-100 text-sky-800 border-sky-200" },
+  { id: "Low Carb", icon: Carrot, color: "bg-orange-100 text-orange-800 border-orange-200" },
 ];
 
 type ViewState =
@@ -137,72 +145,95 @@ function Index() {
         onSelect={onSelectHistory}
       />
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-12 items-center gap-2 border-b border-border bg-background/80 px-3 backdrop-blur">
-          <SidebarTrigger />
-          <span className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
-            <HistoryIcon className="h-4 w-4" />
+        <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur">
+          <SidebarTrigger className="text-foreground/70 hover:text-foreground" />
+          <UtensilsCrossed className="h-5 w-5 text-[oklch(0.58_0.20_30)]" />
+          <span className="flex items-center gap-1.5 text-sm font-semibold text-foreground/80">
             Histórico
           </span>
         </header>
 
-        <main className="px-4 pb-24 pt-8 sm:pt-12">
+        <main className="px-4 pb-24 pt-8 sm:pt-14">
           <div className="mx-auto max-w-3xl">
-            <header className="mb-10 text-center">
-              <div className="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-                <ChefHat className="h-7 w-7" />
+            {/* Hero Header */}
+            <header className="mb-12 text-center">
+              <div
+                className="mx-auto mb-5 inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-[oklch(0.78_0.16_85)] text-[oklch(0.35_0.10_160)] shadow-xl shadow-[oklch(0.78_0.16_85)]/30"
+                style={{ animation: "float 4s ease-in-out infinite" }}
+              >
+                <ChefHat className="h-8 w-8" />
               </div>
-              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                Chef <span className="italic text-primary">Caseiro</span>
+              <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">
+                O que vamos criar{" "}
+                <span className="italic text-[oklch(0.58_0.20_30)] underline decoration-[oklch(0.78_0.16_85)]/40">
+                  hoje?
+                </span>
               </h1>
-              <p className="mx-auto mt-3 max-w-xl text-base text-muted-foreground sm:text-lg">
-                Diga o que tem na sua geladeira e a gente inventa o jantar.
+              <p className="mx-auto mt-3 max-w-lg text-lg text-muted-foreground">
+                Combine seus ingredientes e descubra novas sensações.
               </p>
             </header>
 
+            {/* Input Card */}
             <form
               onSubmit={onSubmit}
-              className="rounded-3xl border border-border bg-card p-5 shadow-xl shadow-foreground/5 sm:p-7"
+              className="relative rounded-[2rem] border-2 border-border bg-card p-6 shadow-2xl shadow-foreground/5 sm:p-8"
             >
+              {/* Decorative suggestion */}
+              <div className="absolute -top-4 right-6 hidden items-center gap-2 rounded-full bg-[oklch(0.95_0.05_75)] px-4 py-1.5 text-xs font-semibold italic text-[oklch(0.50_0.12_75)] sm:flex">
+                <Zap className="h-3.5 w-3.5" />
+                Sugestão: cebola roxa, mel e alecrim
+              </div>
+
               <label
                 htmlFor="ingredients"
-                className="mb-2 block text-sm font-medium text-foreground"
+                className="mb-3 flex items-center gap-2 text-base font-semibold text-foreground"
               >
-                Ingredientes que você tem em casa
+                <UtensilsCrossed className="h-5 w-5 text-[oklch(0.58_0.20_30)]" />
+                O que tem na sua geladeira?
               </label>
-              <Textarea
-                id="ingredients"
-                value={ingredients}
-                onChange={(e) => {
-                  setIngredients(e.target.value);
-                  if (validationError) setValidationError(null);
-                }}
-                placeholder="Ex: 2 tomates, cebola, alho, frango, arroz, manjericão fresco..."
-                rows={5}
-                aria-invalid={!!validationError}
-                aria-describedby={validationError ? "ingredients-error" : undefined}
-                className={cn(
-                  "resize-none border-input bg-background/60 text-base leading-relaxed focus-visible:ring-primary",
-                  validationError && "border-destructive focus-visible:ring-destructive",
-                )}
-              />
+
+              <div className="relative">
+                <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-[oklch(0.95_0.04_85)] text-[oklch(0.65_0.12_55)]">
+                  <Search className="h-5 w-5" />
+                </div>
+                <Textarea
+                  id="ingredients"
+                  value={ingredients}
+                  onChange={(e) => {
+                    setIngredients(e.target.value);
+                    if (validationError) setValidationError(null);
+                  }}
+                  placeholder="2 tomates, cebola, alho, frango, arroz, manjericão fresco..."
+                  rows={4}
+                  aria-invalid={!!validationError}
+                  aria-describedby={validationError ? "ingredients-error" : undefined}
+                  className={cn(
+                    "min-h-[100px] resize-none rounded-[1.5rem] border-2 border-border bg-background/60 pl-16 text-lg leading-relaxed placeholder:text-muted-foreground/60 focus-visible:border-[oklch(0.52_0.14_155)] focus-visible:ring-[oklch(0.52_0.14_155)]/20",
+                    validationError && "border-destructive focus-visible:border-destructive",
+                  )}
+                />
+              </div>
 
               {validationError && (
                 <div
                   id="ingredients-error"
                   role="alert"
-                  className="mt-3 flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-3.5 py-2.5 text-sm text-destructive"
+                  className="mt-4 flex items-start gap-2.5 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
                 >
                   <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                   <span>{validationError}</span>
                 </div>
               )}
 
-              <div className="mt-6">
-                <p className="mb-3 text-sm font-medium text-foreground">
+              {/* Restrictions */}
+              <div className="mt-7">
+                <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
+                  <Flame className="h-4 w-4 text-[oklch(0.58_0.20_30)]" />
                   Restrições alimentares
                 </p>
-                <div className="flex flex-wrap gap-2">
-                  {RESTRICTIONS.map(({ id, icon: Icon }) => {
+                <div className="flex flex-wrap gap-2.5">
+                  {RESTRICTIONS.map(({ id, icon: Icon, color }) => {
                     const active = selected.includes(id);
                     return (
                       <button
@@ -210,13 +241,13 @@ function Index() {
                         type="button"
                         onClick={() => toggle(id)}
                         className={cn(
-                          "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all",
+                          "inline-flex items-center gap-1.5 rounded-full border-2 px-4 py-2 text-sm font-bold transition-all",
                           active
-                            ? "border-primary bg-primary text-primary-foreground shadow-sm"
-                            : "border-border bg-secondary text-secondary-foreground hover:border-primary/40 hover:bg-accent",
+                            ? `${color} shadow-sm scale-[1.02]`
+                            : "border-border bg-secondary text-secondary-foreground hover:border-[oklch(0.52_0.14_155)]/40 hover:bg-accent",
                         )}
                       >
-                        <Icon className="h-3.5 w-3.5" />
+                        <Icon className="h-4 w-4" />
                         {id}
                       </button>
                     );
@@ -224,11 +255,12 @@ function Index() {
                 </div>
               </div>
 
+              {/* Submit Button */}
               <Button
                 type="submit"
                 disabled={mutation.isPending || !deviceId}
                 aria-busy={mutation.isPending}
-                className="mt-7 h-12 w-full rounded-xl bg-primary text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-transform hover:scale-[1.01] hover:bg-primary/95 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
+                className="mt-8 h-14 w-full rounded-[1.5rem] bg-[oklch(0.58_0.20_30)] text-lg font-bold text-white shadow-xl shadow-[oklch(0.58_0.20_30)]/20 transition-all hover:bg-[oklch(0.50_0.18_30)] hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
               >
                 {mutation.isPending ? (
                   <>
@@ -239,12 +271,14 @@ function Index() {
                   <>
                     <Sparkles className="mr-2 h-5 w-5" />
                     Buscar Receitas
+                    <ArrowRight className="ml-2 h-5 w-5" />
                   </>
                 )}
               </Button>
             </form>
 
-            <section className="mt-10">
+            {/* Results Section */}
+            <section className="mt-12">
               {mutation.isError && (
                 <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-5 py-4 text-sm text-destructive">
                   {(mutation.error as Error)?.message ?? "Algo deu errado."}
@@ -252,29 +286,30 @@ function Index() {
               )}
 
               {mutation.isPending && (
-                <div className="space-y-4">
+                <div className="space-y-5">
                   {[0, 1].map((i) => (
                     <div
                       key={i}
-                      className="h-44 animate-pulse rounded-2xl border border-border bg-card/60"
+                      className="h-52 animate-pulse rounded-[2rem] border-2 border-border bg-card/60"
                     />
                   ))}
                 </div>
               )}
 
               {display && !mutation.isPending && (
-                <div className="space-y-6">
+                <div className="space-y-7">
                   {view?.kind === "history" && display.meta && (
-                    <div className="rounded-2xl border border-border bg-card/60 px-5 py-4 text-sm">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+                    <div className="rounded-2xl border-2 border-border bg-card/60 px-6 py-4">
+                      <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[oklch(0.58_0.20_30)]">
+                        <HistoryIcon className="h-3.5 w-3.5" />
                         Do histórico
                       </p>
-                      <p className="mt-1 text-foreground/90">
-                        <span className="font-medium">Ingredientes:</span>{" "}
+                      <p className="mt-1.5 text-sm text-foreground/90">
+                        <span className="font-semibold">Ingredientes:</span>{" "}
                         {display.meta.ingredients}
                       </p>
                       {display.meta.restrictions.length > 0 && (
-                        <p className="mt-1 text-muted-foreground">
+                        <p className="mt-1 text-sm text-muted-foreground">
                           Restrições: {display.meta.restrictions.join(", ")}
                         </p>
                       )}
@@ -282,21 +317,21 @@ function Index() {
                   )}
 
                   {display.notice && (
-                    <div className="flex items-start gap-3 rounded-2xl border border-accent bg-accent/40 px-5 py-4 text-sm text-accent-foreground">
-                      <ChefHat className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                    <div className="flex items-start gap-3.5 rounded-2xl border-2 border-[oklch(0.78_0.16_85)]/50 bg-[oklch(0.95_0.06_85)]/60 px-6 py-4 text-sm text-foreground">
+                      <ChefHat className="mt-0.5 h-5 w-5 shrink-0 text-[oklch(0.58_0.20_30)]" />
                       <p className="leading-relaxed">{display.notice}</p>
                     </div>
                   )}
 
                   {display.recipes.length > 0 && (
                     <>
-                      <h2 className="text-2xl font-semibold tracking-tight">
+                      <h2 className="text-3xl font-semibold tracking-tight">
                         {view?.kind === "history" ? "Receitas salvas" : "Suas receitas"}
                       </h2>
                       {display.assumedPantry.length > 0 && (
-                        <p className="-mt-3 text-sm text-muted-foreground">
+                        <p className="-mt-5 text-sm text-muted-foreground">
                           Considerei que você tem na despensa:{" "}
-                          <span className="font-medium text-foreground">
+                          <span className="font-semibold text-foreground">
                             {display.assumedPantry.join(", ")}
                           </span>
                           .
@@ -320,46 +355,48 @@ function Index() {
 function RecipeCard({ recipe, index }: { recipe: Recipe; index: number }) {
   return (
     <article
-      className="overflow-hidden rounded-3xl border border-border bg-card shadow-lg shadow-foreground/5 transition-transform hover:-translate-y-0.5"
-      style={{ animation: `fadeIn 0.4s ease ${index * 0.08}s both` }}
+      className="overflow-hidden rounded-[2rem] border-2 border-border bg-card shadow-xl shadow-foreground/5 transition-all hover:-translate-y-1 hover:shadow-2xl"
+      style={{ animation: `fadeIn 0.5s ease ${index * 0.1}s both` }}
     >
-      <div className="border-b border-border bg-gradient-to-br from-accent/60 to-secondary/40 px-6 py-5">
-        <h3 className="text-2xl font-semibold tracking-tight text-card-foreground">
+      <div className="border-b-2 border-border bg-gradient-to-br from-[oklch(0.90_0.08_85)]/80 to-[oklch(0.94_0.025_95)]/60 px-7 py-6">
+        <h3 className="text-2xl font-semibold tracking-tight text-card-foreground sm:text-3xl">
           {recipe.title}
         </h3>
-        <p className="mt-1 text-sm text-muted-foreground">{recipe.description}</p>
-        <div className="mt-4 flex flex-wrap gap-3 text-xs font-medium text-foreground/80">
+        <p className="mt-1.5 text-sm text-muted-foreground">{recipe.description}</p>
+        <div className="mt-5 flex flex-wrap gap-3 text-xs font-bold text-foreground/80">
           <Meta icon={Clock} label={recipe.time} />
           <Meta icon={Flame} label={recipe.difficulty} />
           <Meta icon={Users} label={recipe.servings} />
         </div>
       </div>
 
-      <div className="grid gap-6 px-6 py-6 sm:grid-cols-[1fr_1.5fr]">
+      <div className="grid gap-7 px-7 py-7 sm:grid-cols-[1fr_1.5fr]">
         <div>
-          <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-primary">
+          <h4 className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[oklch(0.58_0.20_30)]">
+            <Carrot className="h-3.5 w-3.5" />
             Ingredientes
           </h4>
-          <ul className="space-y-1.5 text-sm text-foreground/90">
+          <ul className="space-y-2 text-sm text-foreground/90">
             {recipe.ingredients.map((ing, idx) => (
-              <li key={idx} className="flex gap-2">
-                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary" />
+              <li key={idx} className="flex gap-2.5">
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[oklch(0.58_0.20_30)]" />
                 {ing}
               </li>
             ))}
           </ul>
         </div>
         <div>
-          <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-primary">
+          <h4 className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[oklch(0.58_0.20_30)]">
+            <CookingPot className="h-3.5 w-3.5" />
             Modo de preparo
           </h4>
-          <ol className="space-y-3 text-sm leading-relaxed text-foreground/90">
+          <ol className="space-y-3.5 text-sm leading-relaxed text-foreground/90">
             {recipe.steps.map((step, idx) => (
-              <li key={idx} className="flex gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+              <li key={idx} className="flex gap-3.5">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[oklch(0.58_0.20_30)]/10 text-xs font-bold text-[oklch(0.58_0.20_30)]">
                   {idx + 1}
                 </span>
-                <span>{step}</span>
+                <span className="pt-0.5">{step}</span>
               </li>
             ))}
           </ol>
@@ -371,8 +408,8 @@ function RecipeCard({ recipe, index }: { recipe: Recipe; index: number }) {
 
 function Meta({ icon: Icon, label }: { icon: typeof Clock; label: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-background/70 px-2.5 py-1">
-      <Icon className="h-3.5 w-3.5 text-primary" />
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-background/80 px-3 py-1.5 border border-border">
+      <Icon className="h-3.5 w-3.5 text-[oklch(0.58_0.20_30)]" />
       {label}
     </span>
   );
