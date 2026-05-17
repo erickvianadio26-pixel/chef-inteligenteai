@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { ChefHat, Sparkles, Clock, Users, Flame, Leaf, Loader2 } from "lucide-react";
+import { ChefHat, Sparkles, Clock, Users, Flame, Leaf, Loader2, AlertCircle } from "lucide-react";
 import { generateRecipes, type Recipe } from "@/lib/recipes.functions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,6 +34,7 @@ function Index() {
   const fn = useServerFn(generateRecipes);
   const [ingredients, setIngredients] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const mutation = useMutation({
     mutationFn: (vars: { ingredients: string; restrictions: string[] }) =>
@@ -45,7 +46,13 @@ function Index() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (ingredients.trim().length < 2) return;
+    if (ingredients.trim().length === 0) {
+      setValidationError(
+        "Por favor, digite pelo menos um ingrediente para que o Chef possa te ajudar!",
+      );
+      return;
+    }
+    setValidationError(null);
     mutation.mutate({ ingredients: ingredients.trim(), restrictions: selected });
   };
 
@@ -77,11 +84,30 @@ function Index() {
           <Textarea
             id="ingredients"
             value={ingredients}
-            onChange={(e) => setIngredients(e.target.value)}
+            onChange={(e) => {
+              setIngredients(e.target.value);
+              if (validationError) setValidationError(null);
+            }}
             placeholder="Ex: 2 tomates, cebola, alho, frango, arroz, manjericão fresco..."
             rows={5}
-            className="resize-none border-input bg-background/60 text-base leading-relaxed focus-visible:ring-primary"
+            aria-invalid={!!validationError}
+            aria-describedby={validationError ? "ingredients-error" : undefined}
+            className={cn(
+              "resize-none border-input bg-background/60 text-base leading-relaxed focus-visible:ring-primary",
+              validationError && "border-destructive focus-visible:ring-destructive",
+            )}
           />
+
+          {validationError && (
+            <div
+              id="ingredients-error"
+              role="alert"
+              className="mt-3 flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-3.5 py-2.5 text-sm text-destructive"
+            >
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+              <span>{validationError}</span>
+            </div>
+          )}
 
           <div className="mt-6">
             <p className="mb-3 text-sm font-medium text-foreground">
@@ -112,18 +138,19 @@ function Index() {
 
           <Button
             type="submit"
-            disabled={mutation.isPending || ingredients.trim().length < 2}
-            className="mt-7 h-12 w-full rounded-xl bg-primary text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-transform hover:scale-[1.01] hover:bg-primary/95 disabled:opacity-60"
+            disabled={mutation.isPending}
+            aria-busy={mutation.isPending}
+            className="mt-7 h-12 w-full rounded-xl bg-primary text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-transform hover:scale-[1.01] hover:bg-primary/95 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
           >
             {mutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Cozinhando ideias...
+                O Chef está pensando na sua receita...
               </>
             ) : (
               <>
                 <Sparkles className="mr-2 h-5 w-5" />
-                Gerar receitas
+                Buscar Receitas
               </>
             )}
           </Button>
