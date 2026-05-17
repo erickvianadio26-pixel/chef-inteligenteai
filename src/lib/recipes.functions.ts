@@ -61,6 +61,12 @@ Formato de saída OBRIGATÓRIO: responda APENAS com JSON válido em português d
   "notice": null
 }`;
 
+export const generateRecipes = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => InputSchema.parse(input))
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY ausente.");
+
     const restrictionsText =
       data.restrictions.length > 0
         ? `Restrições alimentares obrigatórias: ${data.restrictions.join(", ")}.`
@@ -77,7 +83,7 @@ Formato de saída OBRIGATÓRIO: responda APENAS com JSON válido em português d
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userPrompt },
         ],
         response_format: { type: "json_object" },
