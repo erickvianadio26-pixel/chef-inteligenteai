@@ -36,6 +36,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { HistorySidebar } from "@/components/history-sidebar";
+import { PaletteSwitcher } from "@/components/palette-switcher";
 import { useDeviceId } from "@/hooks/use-device-id";
 import { cn } from "@/lib/utils";
 
