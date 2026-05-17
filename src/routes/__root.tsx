@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Chef Caseiro" },
+      { name: "description", content: "IA focada em dar ideias de receita apenas com itens disponiveis em sua casa" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Chef Caseiro" },
+      { property: "og:description", content: "IA focada em dar ideias de receita apenas com itens disponiveis em sua casa" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Chef Caseiro" },
+      { name: "twitter:description", content: "IA focada em dar ideias de receita apenas com itens disponiveis em sua casa" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/3d9aab20-0cb7-4d98-bb07-9b5112e82a99" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/3d9aab20-0cb7-4d98-bb07-9b5112e82a99" },
     ],
     links: [
       {
