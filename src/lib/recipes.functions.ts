@@ -119,5 +119,75 @@ export const generateRecipes = createServerFn({ method: "POST" })
     }
 
     const validated = RecipeSchema.parse(parsed);
+
+    // Persist only when actual recipes were generated (skip refusals).
+    if (validated.recipes.length > 0) {
+      const { error: insertError } = await supabaseAdmin
+        .from("recipe_history")
+        .insert({
+          device_id: data.deviceId,
+          ingredients: data.ingredients,
+          restrictions: data.restrictions,
+          recipes: validated.recipes,
+          notice: validated.notice ?? null,
+          assumed_pantry: validated.assumedPantry ?? [],
+        });
+      if (insertError) {
+        console.error("Failed to save recipe history:", insertError);
+      }
+
+      // Keep only the latest 5 per device.
+      const { data: extra } = await supabaseAdmin
+        .from("recipe_history")
+        .select("id")
+        .eq("device_id", data.deviceId)
+        .order("created_at", { ascending: false })
+        .range(5, 1000);
+      const idsToDelete = (extra ?? []).map((r) => r.id);
+      if (idsToDelete.length > 0) {
+        await supabaseAdmin.from("recipe_history").delete().in("id", idsToDelete);
+      }
+    }
+
     return validated;
+  });
+
+const HistoryInputSchema = z.object({
+  deviceId: z.string().regex(DEVICE_ID_RE),
+});
+
+export type HistoryEntry = {
+  id: string;
+  ingredients: string;
+  restrictions: string[];
+  recipes: Recipe[];
+  notice: string | null;
+  assumedPantry: string[];
+  createdAt: string;
+};
+
+export const getRecipeHistory = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => HistoryInputSchema.parse(input))
+  .handler(async ({ data }): Promise<HistoryEntry[]> => {
+    const { data: rows, error } = await supabaseAdmin
+      .from("recipe_history")
+      .select("id, ingredients, restrictions, recipes, notice, assumed_pantry, created_at")
+      .eq("device_id", data.deviceId)
+      .order("created_at", { ascending: false })
+      .limit(5);
+
+    if (error) {
+      console.error("Failed to load history:", error);
+      return [];
+    }
+
+    return (rows ?? []).map((r) => ({
+      id: r.id as string,
+      ingredients: r.ingredients as string,
+      restrictions: (r.restrictions as string[]) ?? [],
+      recipes: (r.recipes as Recipe[]) ?? [],
+      notice: (r.notice as string | null) ?? null,
+      assumedPantry: (r.assumed_pantry as string[]) ?? [],
+      createdAt: r.created_at as string,
+    }));
   });
