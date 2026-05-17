@@ -84,11 +84,30 @@ function Index() {
           <Textarea
             id="ingredients"
             value={ingredients}
-            onChange={(e) => setIngredients(e.target.value)}
+            onChange={(e) => {
+              setIngredients(e.target.value);
+              if (validationError) setValidationError(null);
+            }}
             placeholder="Ex: 2 tomates, cebola, alho, frango, arroz, manjericão fresco..."
             rows={5}
-            className="resize-none border-input bg-background/60 text-base leading-relaxed focus-visible:ring-primary"
+            aria-invalid={!!validationError}
+            aria-describedby={validationError ? "ingredients-error" : undefined}
+            className={cn(
+              "resize-none border-input bg-background/60 text-base leading-relaxed focus-visible:ring-primary",
+              validationError && "border-destructive focus-visible:ring-destructive",
+            )}
           />
+
+          {validationError && (
+            <div
+              id="ingredients-error"
+              role="alert"
+              className="mt-3 flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-3.5 py-2.5 text-sm text-destructive"
+            >
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+              <span>{validationError}</span>
+            </div>
+          )}
 
           <div className="mt-6">
             <p className="mb-3 text-sm font-medium text-foreground">
