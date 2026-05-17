@@ -176,12 +176,32 @@ function Index() {
 
           {mutation.data && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-semibold tracking-tight">
-                Suas receitas
-              </h2>
-              {mutation.data.recipes.map((r, i) => (
-                <RecipeCard key={i} recipe={r} index={i} />
-              ))}
+              {mutation.data.notice && (
+                <div className="flex items-start gap-3 rounded-2xl border border-accent bg-accent/40 px-5 py-4 text-sm text-accent-foreground">
+                  <ChefHat className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                  <p className="leading-relaxed">{mutation.data.notice}</p>
+                </div>
+              )}
+
+              {mutation.data.recipes.length > 0 && (
+                <>
+                  <h2 className="text-2xl font-semibold tracking-tight">
+                    Suas receitas
+                  </h2>
+                  {mutation.data.assumedPantry && mutation.data.assumedPantry.length > 0 && (
+                    <p className="-mt-3 text-sm text-muted-foreground">
+                      Considerei que você tem na despensa:{" "}
+                      <span className="font-medium text-foreground">
+                        {mutation.data.assumedPantry.join(", ")}
+                      </span>
+                      .
+                    </p>
+                  )}
+                  {mutation.data.recipes.map((r, i) => (
+                    <RecipeCard key={i} recipe={r} index={i} />
+                  ))}
+                </>
+              )}
             </div>
           )}
         </section>
