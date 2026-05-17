@@ -32,86 +32,100 @@
   --color-ring: var(--ring);
   --color-spice: var(--spice);
   --color-herb: var(--herb);
+  --color-tomato: var(--tomato);
+  --color-mustard: var(--mustard);
+  --color-forest: var(--forest);
   --font-display: var(--font-display);
   --font-sans: var(--font-sans);
 }
 
 :root {
-  --radius: 0.875rem;
+  --radius: 1.25rem;
 
-  /* Warm culinary palette: cream backgrounds, terracotta primary, sage herb accent */
-  --background: oklch(0.985 0.012 80);
-  --foreground: oklch(0.235 0.035 40);
+  /* Artisanal kitchen: deep forest green, warm cream, tomato red, mustard gold */
+  --background: oklch(0.975 0.015 95);
+  --foreground: oklch(0.22 0.04 160);
 
-  --card: oklch(0.995 0.008 85);
-  --card-foreground: oklch(0.235 0.035 40);
-  --popover: oklch(0.995 0.008 85);
-  --popover-foreground: oklch(0.235 0.035 40);
+  --card: oklch(0.99 0.01 95);
+  --card-foreground: oklch(0.22 0.04 160);
+  --popover: oklch(0.99 0.01 95);
+  --popover-foreground: oklch(0.22 0.04 160);
 
-  --primary: oklch(0.555 0.165 38);          /* terracotta */
-  --primary-foreground: oklch(0.99 0.01 80);
+  --primary: oklch(0.52 0.14 155);
+  --primary-foreground: oklch(0.98 0.01 95);
 
-  --secondary: oklch(0.94 0.025 75);          /* warm cream */
-  --secondary-foreground: oklch(0.30 0.04 40);
+  --secondary: oklch(0.94 0.025 95);
+  --secondary-foreground: oklch(0.28 0.05 160);
 
-  --muted: oklch(0.945 0.018 75);
-  --muted-foreground: oklch(0.48 0.03 50);
+  --muted: oklch(0.93 0.018 95);
+  --muted-foreground: oklch(0.48 0.03 140);
 
-  --accent: oklch(0.86 0.085 75);             /* soft amber */
-  --accent-foreground: oklch(0.28 0.05 40);
+  --accent: oklch(0.90 0.08 85);
+  --accent-foreground: oklch(0.26 0.05 160);
 
-  --spice: oklch(0.68 0.175 55);              /* paprika */
-  --herb: oklch(0.58 0.085 145);              /* sage */
+  --spice: oklch(0.58 0.20 30);
+  --herb: oklch(0.60 0.10 150);
+  --tomato: oklch(0.58 0.20 30);
+  --mustard: oklch(0.78 0.16 85);
+  --forest: oklch(0.35 0.10 160);
 
-  --destructive: oklch(0.55 0.22 28);
-  --destructive-foreground: oklch(0.99 0.01 80);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.99 0.01 95);
 
-  --border: oklch(0.89 0.02 75);
-  --input: oklch(0.92 0.018 75);
-  --ring: oklch(0.555 0.165 38);
+  --border: oklch(0.89 0.025 90);
+  --input: oklch(0.92 0.02 90);
+  --ring: oklch(0.52 0.14 155);
 
-  --font-display: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
 }
 
 .dark {
-  --background: oklch(0.20 0.025 40);
-  --foreground: oklch(0.96 0.015 80);
-  --card: oklch(0.245 0.03 40);
-  --card-foreground: oklch(0.96 0.015 80);
-  --popover: oklch(0.245 0.03 40);
-  --popover-foreground: oklch(0.96 0.015 80);
-  --primary: oklch(0.68 0.155 42);
-  --primary-foreground: oklch(0.18 0.02 40);
-  --secondary: oklch(0.30 0.03 40);
-  --secondary-foreground: oklch(0.96 0.015 80);
-  --muted: oklch(0.30 0.03 40);
-  --muted-foreground: oklch(0.72 0.02 60);
-  --accent: oklch(0.40 0.06 50);
-  --accent-foreground: oklch(0.96 0.015 80);
-  --spice: oklch(0.72 0.17 55);
-  --herb: oklch(0.65 0.09 145);
-  --destructive: oklch(0.62 0.22 28);
-  --destructive-foreground: oklch(0.96 0.015 80);
+  --background: oklch(0.18 0.03 160);
+  --foreground: oklch(0.96 0.015 95);
+  --card: oklch(0.24 0.03 160);
+  --card-foreground: oklch(0.96 0.015 95);
+  --popover: oklch(0.24 0.03 160);
+  --popover-foreground: oklch(0.96 0.015 95);
+  --primary: oklch(0.65 0.14 155);
+  --primary-foreground: oklch(0.15 0.02 160);
+  --secondary: oklch(0.28 0.03 160);
+  --secondary-foreground: oklch(0.96 0.015 95);
+  --muted: oklch(0.28 0.03 160);
+  --muted-foreground: oklch(0.72 0.02 140);
+  --accent: oklch(0.35 0.06 160);
+  --accent-foreground: oklch(0.96 0.015 95);
+  --tomato: oklch(0.65 0.18 30);
+  --mustard: oklch(0.75 0.14 85);
+  --forest: oklch(0.50 0.10 160);
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(0.96 0.015 95);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.68 0.155 42);
+  --ring: oklch(0.65 0.14 155);
 }
 
 @layer base {
   @font-face {
-    font-family: "Fraunces";
+    font-family: "Playfair Display";
     font-style: normal;
     font-weight: 400 900;
     font-display: swap;
-    src: url("https://fonts.gstatic.com/s/fraunces/v32/6NUh8FyLNQOQZAnv9bYEvDiIdE9Ea92uemAk.woff2") format("woff2");
+    src: url("https://fonts.gstatic.com/s/playfairdisplay/v37/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKdFvXDXbtM.woff2") format("woff2");
   }
   @font-face {
-    font-family: "Inter";
-    font-style: normal;
-    font-weight: 100 900;
+    font-family: "Playfair Display";
+    font-style: italic;
+    font-weight: 400 900;
     font-display: swap;
-    src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50ojIw2boKoduKmMEVuLyfMZg.woff2") format("woff2");
+    src: url("https://fonts.gstatic.com/s/playfairdisplay/v37/nuFRD-vYSZviVYUb_rj3ij__anPXDTnCjmHKM4nYO7KN_qiTbtbK-F0.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Outfit";
+    font-style: normal;
+    font-weight: 300 900;
+    font-display: swap;
+    src: url("https://fonts.gstatic.com/s/outfit/v11/QGYyz_MVcBeNP4NJtEtjUYL3L4jDvMqfGZyP.woff2") format("woff2");
   }
 
   * {
@@ -123,8 +137,9 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     background-image:
-      radial-gradient(at 15% 10%, oklch(0.88 0.07 65 / 0.45) 0px, transparent 55%),
-      radial-gradient(at 85% 90%, oklch(0.85 0.06 145 / 0.35) 0px, transparent 55%);
+      radial-gradient(at 10% 5%, oklch(0.78 0.16 85 / 0.30) 0px, transparent 50%),
+      radial-gradient(at 90% 95%, oklch(0.52 0.14 155 / 0.20) 0px, transparent 50%),
+      radial-gradient(at 50% 50%, oklch(0.58 0.20 30 / 0.08) 0px, transparent 40%);
     background-attachment: fixed;
   }
 
@@ -137,4 +152,9 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50% { transform: translateY(-6px) rotate(-4deg); }
 }

@@ -37,18 +37,24 @@ export function HistorySidebar({ history, isLoading, selectedId, onSelect }: Pro
   const collapsed = state === "collapsed";
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border bg-card/80">
-      <SidebarHeader className="border-b border-border px-3 py-4">
+    <Sidebar
+      collapsible="icon"
+      className="border-r border-border bg-[oklch(0.35_0.10_160)] text-white/90"
+    >
+      <SidebarHeader className="border-b border-white/10 px-3 py-4">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md shadow-primary/20">
-            <ChefHat className="h-5 w-5" />
+          <div
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[oklch(0.78_0.16_85)] text-[oklch(0.35_0.10_160)] shadow-lg"
+            style={{ animation: "float 4s ease-in-out infinite" }}
+          >
+            <ChefHat className="h-6 w-6" />
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <p className="font-display text-base font-semibold leading-tight">
+              <p className="font-display text-lg font-bold leading-tight text-white">
                 Chef Caseiro
               </p>
-              <p className="truncate text-xs text-muted-foreground">
+              <p className="truncate text-xs text-white/60">
                 Suas receitas recentes
               </p>
             </div>
@@ -58,7 +64,7 @@ export function HistorySidebar({ history, isLoading, selectedId, onSelect }: Pro
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="flex items-center gap-1.5">
+          <SidebarGroupLabel className="flex items-center gap-1.5 text-white/50">
             <History className="h-3.5 w-3.5" />
             {!collapsed && <span>Últimas 5 receitas</span>}
           </SidebarGroupLabel>
@@ -70,21 +76,20 @@ export function HistorySidebar({ history, isLoading, selectedId, onSelect }: Pro
                   {[0, 1, 2].map((i) => (
                     <div
                       key={i}
-                      className="h-12 animate-pulse rounded-lg bg-muted"
+                      className="h-12 animate-pulse rounded-xl bg-white/10"
                     />
                   ))}
                 </div>
               )}
 
               {!isLoading && history.length === 0 && !collapsed && (
-                <p className="px-3 py-2 text-xs leading-relaxed text-muted-foreground">
+                <p className="px-3 py-2 text-xs leading-relaxed text-white/50">
                   Suas receitas geradas aparecerão aqui automaticamente.
                 </p>
               )}
 
               {history.map((entry) => {
-                const title =
-                  entry.recipes[0]?.title ?? "Receita";
+                const title = entry.recipes[0]?.title ?? "Receita";
                 const active = entry.id === selectedId;
                 return (
                   <SidebarMenuItem key={entry.id}>
@@ -93,14 +98,14 @@ export function HistorySidebar({ history, isLoading, selectedId, onSelect }: Pro
                       isActive={active}
                       tooltip={collapsed ? title : undefined}
                       className={cn(
-                        "h-auto items-start gap-2 py-2.5",
-                        active && "bg-primary/10 text-primary",
+                        "h-auto items-start gap-2 rounded-xl py-2.5 text-white/70 hover:bg-white/10 hover:text-white",
+                        active && "bg-white/15 text-white",
                       )}
                     >
                       <Sparkles
                         className={cn(
                           "mt-0.5 h-4 w-4 shrink-0",
-                          active ? "text-primary" : "text-muted-foreground",
+                          active ? "text-[oklch(0.78_0.16_85)]" : "text-white/40",
                         )}
                       />
                       {!collapsed && (
@@ -108,7 +113,7 @@ export function HistorySidebar({ history, isLoading, selectedId, onSelect }: Pro
                           <span className="truncate text-sm font-medium">
                             {title}
                           </span>
-                          <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                          <span className="flex items-center gap-1 text-[11px] text-white/50">
                             <Clock className="h-3 w-3" />
                             {formatWhen(entry.createdAt)}
                           </span>
