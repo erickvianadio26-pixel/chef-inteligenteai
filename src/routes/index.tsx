@@ -138,18 +138,19 @@ function Index() {
 
           <Button
             type="submit"
-            disabled={mutation.isPending || ingredients.trim().length < 2}
-            className="mt-7 h-12 w-full rounded-xl bg-primary text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-transform hover:scale-[1.01] hover:bg-primary/95 disabled:opacity-60"
+            disabled={mutation.isPending}
+            aria-busy={mutation.isPending}
+            className="mt-7 h-12 w-full rounded-xl bg-primary text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-transform hover:scale-[1.01] hover:bg-primary/95 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
           >
             {mutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Cozinhando ideias...
+                O Chef está pensando na sua receita...
               </>
             ) : (
               <>
                 <Sparkles className="mr-2 h-5 w-5" />
-                Gerar receitas
+                Buscar Receitas
               </>
             )}
           </Button>
