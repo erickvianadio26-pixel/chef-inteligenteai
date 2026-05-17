@@ -36,6 +36,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { HistorySidebar } from "@/components/history-sidebar";
+import { PaletteSwitcher } from "@/components/palette-switcher";
 import { useDeviceId } from "@/hooks/use-device-id";
 import { cn } from "@/lib/utils";
 
@@ -147,10 +148,13 @@ function Index() {
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur">
           <SidebarTrigger className="text-foreground/70 hover:text-foreground" />
-          <UtensilsCrossed className="h-5 w-5 text-[oklch(0.58_0.20_30)]" />
+          <UtensilsCrossed className="h-5 w-5 text-[var(--tomato)]" />
           <span className="flex items-center gap-1.5 text-sm font-semibold text-foreground/80">
             Histórico
           </span>
+          <div className="ml-auto">
+            <PaletteSwitcher />
+          </div>
         </header>
 
         <main className="px-4 pb-24 pt-8 sm:pt-14">
@@ -158,14 +162,14 @@ function Index() {
             {/* Hero Header */}
             <header className="mb-12 text-center">
               <div
-                className="mx-auto mb-5 inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-[oklch(0.78_0.16_85)] text-[oklch(0.35_0.10_160)] shadow-xl shadow-[oklch(0.78_0.16_85)]/30"
+                className="mx-auto mb-5 inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-[var(--mustard)] text-[var(--forest)] shadow-xl shadow-[var(--mustard)]/30"
                 style={{ animation: "float 4s ease-in-out infinite" }}
               >
                 <ChefHat className="h-8 w-8" />
               </div>
               <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">
                 O que vamos criar{" "}
-                <span className="italic text-[oklch(0.58_0.20_30)] underline decoration-[oklch(0.78_0.16_85)]/40">
+                <span className="italic text-[var(--tomato)] underline decoration-[var(--mustard)]/40">
                   hoje?
                 </span>
               </h1>
@@ -180,7 +184,7 @@ function Index() {
               className="relative rounded-[2rem] border-2 border-border bg-card p-6 shadow-2xl shadow-foreground/5 sm:p-8"
             >
               {/* Decorative suggestion */}
-              <div className="absolute -top-4 right-6 hidden items-center gap-2 rounded-full bg-[oklch(0.95_0.05_75)] px-4 py-1.5 text-xs font-semibold italic text-[oklch(0.50_0.12_75)] sm:flex">
+              <div className="absolute -top-4 right-6 hidden items-center gap-2 rounded-full bg-[var(--accent-soft)] px-4 py-1.5 text-xs font-semibold italic text-[var(--forest)] sm:flex">
                 <Zap className="h-3.5 w-3.5" />
                 Sugestão: cebola roxa, mel e alecrim
               </div>
@@ -189,12 +193,12 @@ function Index() {
                 htmlFor="ingredients"
                 className="mb-3 flex items-center gap-2 text-base font-semibold text-foreground"
               >
-                <UtensilsCrossed className="h-5 w-5 text-[oklch(0.58_0.20_30)]" />
+                <UtensilsCrossed className="h-5 w-5 text-[var(--tomato)]" />
                 O que tem na sua geladeira?
               </label>
 
               <div className="relative">
-                <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-[oklch(0.95_0.04_85)] text-[oklch(0.65_0.12_55)]">
+                <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--tomato)]">
                   <Search className="h-5 w-5" />
                 </div>
                 <Textarea
@@ -209,7 +213,7 @@ function Index() {
                   aria-invalid={!!validationError}
                   aria-describedby={validationError ? "ingredients-error" : undefined}
                   className={cn(
-                    "min-h-[100px] resize-none rounded-[1.5rem] border-2 border-border bg-background/60 pl-16 text-lg leading-relaxed placeholder:text-muted-foreground/60 focus-visible:border-[oklch(0.52_0.14_155)] focus-visible:ring-[oklch(0.52_0.14_155)]/20",
+                    "min-h-[100px] resize-none rounded-[1.5rem] border-2 border-border bg-background/60 pl-16 text-lg leading-relaxed placeholder:text-muted-foreground/60 focus-visible:border-[var(--primary)] focus-visible:ring-[var(--primary)]/20",
                     validationError && "border-destructive focus-visible:border-destructive",
                   )}
                 />
@@ -229,7 +233,7 @@ function Index() {
               {/* Restrictions */}
               <div className="mt-7">
                 <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
-                  <Flame className="h-4 w-4 text-[oklch(0.58_0.20_30)]" />
+                  <Flame className="h-4 w-4 text-[var(--tomato)]" />
                   Restrições alimentares
                 </p>
                 <div className="flex flex-wrap gap-2.5">
@@ -244,7 +248,7 @@ function Index() {
                           "inline-flex items-center gap-1.5 rounded-full border-2 px-4 py-2 text-sm font-bold transition-all",
                           active
                             ? `${color} shadow-sm scale-[1.02]`
-                            : "border-border bg-secondary text-secondary-foreground hover:border-[oklch(0.52_0.14_155)]/40 hover:bg-accent",
+                            : "border-border bg-secondary text-secondary-foreground hover:border-[var(--primary)]/40 hover:bg-accent",
                         )}
                       >
                         <Icon className="h-4 w-4" />
@@ -260,7 +264,7 @@ function Index() {
                 type="submit"
                 disabled={mutation.isPending || !deviceId}
                 aria-busy={mutation.isPending}
-                className="mt-8 h-14 w-full rounded-[1.5rem] bg-[oklch(0.58_0.20_30)] text-lg font-bold text-white shadow-xl shadow-[oklch(0.58_0.20_30)]/20 transition-all hover:bg-[oklch(0.50_0.18_30)] hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                className="mt-8 h-14 w-full rounded-[1.5rem] bg-[var(--tomato)] text-lg font-bold text-white shadow-xl shadow-[var(--tomato)]/20 transition-all hover:bg-[var(--tomato)] hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
               >
                 {mutation.isPending ? (
                   <>
@@ -300,7 +304,7 @@ function Index() {
                 <div className="space-y-7">
                   {view?.kind === "history" && display.meta && (
                     <div className="rounded-2xl border-2 border-border bg-card/60 px-6 py-4">
-                      <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[oklch(0.58_0.20_30)]">
+                      <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--tomato)]">
                         <HistoryIcon className="h-3.5 w-3.5" />
                         Do histórico
                       </p>
@@ -317,8 +321,8 @@ function Index() {
                   )}
 
                   {display.notice && (
-                    <div className="flex items-start gap-3.5 rounded-2xl border-2 border-[oklch(0.78_0.16_85)]/50 bg-[oklch(0.95_0.06_85)]/60 px-6 py-4 text-sm text-foreground">
-                      <ChefHat className="mt-0.5 h-5 w-5 shrink-0 text-[oklch(0.58_0.20_30)]" />
+                    <div className="flex items-start gap-3.5 rounded-2xl border-2 border-[var(--mustard)]/50 bg-[var(--accent-soft)]/60 px-6 py-4 text-sm text-foreground">
+                      <ChefHat className="mt-0.5 h-5 w-5 shrink-0 text-[var(--tomato)]" />
                       <p className="leading-relaxed">{display.notice}</p>
                     </div>
                   )}
@@ -358,7 +362,7 @@ function RecipeCard({ recipe, index }: { recipe: Recipe; index: number }) {
       className="overflow-hidden rounded-[2rem] border-2 border-border bg-card shadow-xl shadow-foreground/5 transition-all hover:-translate-y-1 hover:shadow-2xl"
       style={{ animation: `fadeIn 0.5s ease ${index * 0.1}s both` }}
     >
-      <div className="border-b-2 border-border bg-gradient-to-br from-[oklch(0.90_0.08_85)]/80 to-[oklch(0.94_0.025_95)]/60 px-7 py-6">
+      <div className="border-b-2 border-border bg-gradient-to-br from-[var(--accent)]/80 to-[var(--secondary)]/60 px-7 py-6">
         <h3 className="text-2xl font-semibold tracking-tight text-card-foreground sm:text-3xl">
           {recipe.title}
         </h3>
@@ -372,28 +376,28 @@ function RecipeCard({ recipe, index }: { recipe: Recipe; index: number }) {
 
       <div className="grid gap-7 px-7 py-7 sm:grid-cols-[1fr_1.5fr]">
         <div>
-          <h4 className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[oklch(0.58_0.20_30)]">
+          <h4 className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--tomato)]">
             <Carrot className="h-3.5 w-3.5" />
             Ingredientes
           </h4>
           <ul className="space-y-2 text-sm text-foreground/90">
             {recipe.ingredients.map((ing, idx) => (
               <li key={idx} className="flex gap-2.5">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[oklch(0.58_0.20_30)]" />
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--tomato)]" />
                 {ing}
               </li>
             ))}
           </ul>
         </div>
         <div>
-          <h4 className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[oklch(0.58_0.20_30)]">
+          <h4 className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--tomato)]">
             <CookingPot className="h-3.5 w-3.5" />
             Modo de preparo
           </h4>
           <ol className="space-y-3.5 text-sm leading-relaxed text-foreground/90">
             {recipe.steps.map((step, idx) => (
               <li key={idx} className="flex gap-3.5">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[oklch(0.58_0.20_30)]/10 text-xs font-bold text-[oklch(0.58_0.20_30)]">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--tomato)]/10 text-xs font-bold text-[var(--tomato)]">
                   {idx + 1}
                 </span>
                 <span className="pt-0.5">{step}</span>
@@ -409,7 +413,7 @@ function RecipeCard({ recipe, index }: { recipe: Recipe; index: number }) {
 function Meta({ icon: Icon, label }: { icon: typeof Clock; label: string }) {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full bg-background/80 px-3 py-1.5 border border-border">
-      <Icon className="h-3.5 w-3.5 text-[oklch(0.58_0.20_30)]" />
+      <Icon className="h-3.5 w-3.5 text-[var(--tomato)]" />
       {label}
     </span>
   );
