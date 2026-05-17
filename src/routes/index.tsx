@@ -180,7 +180,7 @@ function Index() {
               className="relative rounded-[2rem] border-2 border-border bg-card p-6 shadow-2xl shadow-foreground/5 sm:p-8"
             >
               {/* Decorative suggestion */}
-              <div className="absolute -top-4 right-6 hidden items-center gap-2 rounded-full bg-[oklch(0.95_0.05_75)] px-4 py-1.5 text-xs font-semibold italic text-[var(--forest)] sm:flex">
+              <div className="absolute -top-4 right-6 hidden items-center gap-2 rounded-full bg-[var(--accent-soft)] px-4 py-1.5 text-xs font-semibold italic text-[var(--forest)] sm:flex">
                 <Zap className="h-3.5 w-3.5" />
                 Sugestão: cebola roxa, mel e alecrim
               </div>
