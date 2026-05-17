@@ -39,12 +39,12 @@ export function HistorySidebar({ history, isLoading, selectedId, onSelect }: Pro
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-border bg-[oklch(0.35_0.10_160)] text-white/90"
+      className="border-r border-border bg-[var(--forest)] text-white/90"
     >
       <SidebarHeader className="border-b border-white/10 px-3 py-4">
         <div className="flex items-center gap-2.5">
           <div
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[oklch(0.78_0.16_85)] text-[oklch(0.35_0.10_160)] shadow-lg"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--mustard)] text-[var(--forest)] shadow-lg"
             style={{ animation: "float 4s ease-in-out infinite" }}
           >
             <ChefHat className="h-6 w-6" />
@@ -105,7 +105,7 @@ export function HistorySidebar({ history, isLoading, selectedId, onSelect }: Pro
                       <Sparkles
                         className={cn(
                           "mt-0.5 h-4 w-4 shrink-0",
-                          active ? "text-[oklch(0.78_0.16_85)]" : "text-white/40",
+                          active ? "text-[var(--mustard)]" : "text-white/40",
                         )}
                       />
                       {!collapsed && (
