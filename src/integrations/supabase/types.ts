@@ -14,7 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      recipe_history: {
+        Row: {
+          assumed_pantry: string[]
+          created_at: string
+          device_id: string
+          id: string
+          ingredients: string
+          notice: string | null
+          recipes: Json
+          restrictions: string[]
+        }
+        Insert: {
+          assumed_pantry?: string[]
+          created_at?: string
+          device_id: string
+          id?: string
+          ingredients: string
+          notice?: string | null
+          recipes: Json
+          restrictions?: string[]
+        }
+        Update: {
+          assumed_pantry?: string[]
+          created_at?: string
+          device_id?: string
+          id?: string
+          ingredients?: string
+          notice?: string | null
+          recipes?: Json
+          restrictions?: string[]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
