@@ -34,6 +34,7 @@ function Index() {
   const fn = useServerFn(generateRecipes);
   const [ingredients, setIngredients] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const mutation = useMutation({
     mutationFn: (vars: { ingredients: string; restrictions: string[] }) =>
@@ -45,7 +46,13 @@ function Index() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (ingredients.trim().length < 2) return;
+    if (ingredients.trim().length === 0) {
+      setValidationError(
+        "Por favor, digite pelo menos um ingrediente para que o Chef possa te ajudar!",
+      );
+      return;
+    }
+    setValidationError(null);
     mutation.mutate({ ingredients: ingredients.trim(), restrictions: selected });
   };
 
