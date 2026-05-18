@@ -379,6 +379,14 @@ function Index() {
             </section>
           </div>
         </main>
+
+        {/* AI Footer */}
+        <footer className="border-t border-border bg-card/40 py-4 text-center">
+          <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+            <BrainCircuit className="h-3.5 w-3.5" />
+            Gerado por IA — Chef Caseiro 2026
+          </p>
+        </footer>
       </SidebarInset>
     </SidebarProvider>
   );
