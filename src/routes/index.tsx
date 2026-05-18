@@ -129,7 +129,12 @@ function Index() {
       );
       return;
     }
-    
+    if (wordCount > MAX_WORDS) {
+      setValidationError(
+        `O texto deve ter no máximo ${MAX_WORDS} palavras. Atualmente tem ${wordCount}.`,
+      );
+      return;
+    }
     setValidationError(null);
     mutation.mutate({ ingredients: ingredients.trim(), restrictions: selected });
   };
