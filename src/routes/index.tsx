@@ -76,6 +76,8 @@ function Index() {
   const [ingredients, setIngredients] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [wordCount, setWordCount] = useState(0);
+  const MAX_WORDS = 100;
   const [view, setView] = useState<ViewState>(null);
   const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
 
