@@ -85,7 +85,7 @@ function Index() {
 
   const mutation = useMutation({
     mutationFn: async (vars: { ingredients: string; restrictions: string[] }) => {
-      const TIMEOUT_MS = 30_000;
+      const TIMEOUT_MS = 10_000;
       let timeoutId: ReturnType<typeof setTimeout> | undefined;
       const timeout = new Promise<never>((_, reject) => {
         timeoutId = setTimeout(
