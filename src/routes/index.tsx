@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/sidebar";
 import { HistorySidebar } from "@/components/history-sidebar";
 import { PaletteSwitcher } from "@/components/palette-switcher";
-import { useDeviceId } from "@/hooks/use-device-id";
+
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
@@ -68,7 +68,6 @@ type ViewState =
   | null;
 
 function Index() {
-  const deviceId = useDeviceId();
   const queryClient = useQueryClient();
   const generate = useServerFn(generateRecipes);
   const fetchHistory = useServerFn(getRecipeHistory);
@@ -80,18 +79,17 @@ function Index() {
   const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
 
   const historyQuery = useQuery({
-    queryKey: ["recipe-history", deviceId],
-    queryFn: () => fetchHistory({ data: { deviceId: deviceId! } }),
-    enabled: !!deviceId,
+    queryKey: ["recipe-history"],
+    queryFn: () => fetchHistory(),
   });
 
   const mutation = useMutation({
     mutationFn: (vars: { ingredients: string; restrictions: string[] }) =>
-      generate({ data: { ...vars, deviceId: deviceId! } }),
+      generate({ data: vars }),
     onSuccess: (data) => {
       setView({ kind: "fresh", data });
       setSelectedHistoryId(null);
-      queryClient.invalidateQueries({ queryKey: ["recipe-history", deviceId] });
+      queryClient.invalidateQueries({ queryKey: ["recipe-history"] });
     },
   });
 
@@ -106,7 +104,7 @@ function Index() {
       );
       return;
     }
-    if (!deviceId) return;
+    
     setValidationError(null);
     mutation.mutate({ ingredients: ingredients.trim(), restrictions: selected });
   };
@@ -262,7 +260,7 @@ function Index() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                disabled={mutation.isPending || !deviceId}
+                disabled={mutation.isPending}
                 aria-busy={mutation.isPending}
                 className="mt-8 h-14 w-full rounded-[1.5rem] bg-[var(--tomato)] text-lg font-bold text-white shadow-xl shadow-[var(--tomato)]/20 transition-all hover:bg-[var(--tomato)] hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
               >
@@ -285,7 +283,7 @@ function Index() {
             <section className="mt-12">
               {mutation.isError && (
                 <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-5 py-4 text-sm text-destructive">
-                  {(mutation.error as Error)?.message ?? "Algo deu errado."}
+                  {(mutation.error as Error)?.message || "Algo deu errado. Tente novamente."}
                 </div>
               )}
 
