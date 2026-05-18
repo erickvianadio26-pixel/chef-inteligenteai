@@ -76,6 +76,8 @@ function Index() {
   const [ingredients, setIngredients] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [wordCount, setWordCount] = useState(0);
+  const MAX_WORDS = 100;
   const [view, setView] = useState<ViewState>(null);
   const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
 
@@ -127,7 +129,12 @@ function Index() {
       );
       return;
     }
-    
+    if (wordCount > MAX_WORDS) {
+      setValidationError(
+        `O texto deve ter no máximo ${MAX_WORDS} palavras. Atualmente tem ${wordCount}.`,
+      );
+      return;
+    }
     setValidationError(null);
     mutation.mutate({ ingredients: ingredients.trim(), restrictions: selected });
   };
@@ -226,7 +233,10 @@ function Index() {
                   id="ingredients"
                   value={ingredients}
                   onChange={(e) => {
-                    setIngredients(e.target.value);
+                    const val = e.target.value;
+                    const words = val.trim().split(/\s+/).filter(Boolean).length;
+                    setIngredients(val);
+                    setWordCount(words);
                     if (validationError) setValidationError(null);
                   }}
                   placeholder="2 tomates, cebola, alho, frango, arroz, manjericão fresco..."
@@ -238,6 +248,17 @@ function Index() {
                     validationError && "border-destructive focus-visible:border-destructive",
                   )}
                 />
+              </div>
+
+              <div className="mt-2 flex items-center justify-between px-1">
+                <p className="text-xs text-muted-foreground">
+                  {wordCount} / {MAX_WORDS} palavras
+                </p>
+                {wordCount > MAX_WORDS && (
+                  <p className="text-xs font-semibold text-destructive">
+                    Limite de palavras excedido
+                  </p>
+                )}
               </div>
 
               {validationError && (
