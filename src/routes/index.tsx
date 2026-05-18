@@ -20,6 +20,7 @@ import {
   Search,
   ArrowRight,
   Carrot,
+  BrainCircuit,
 } from "lucide-react";
 import {
   generateRecipes,
