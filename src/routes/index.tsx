@@ -68,7 +68,6 @@ type ViewState =
   | null;
 
 function Index() {
-  const deviceId = useDeviceId();
   const queryClient = useQueryClient();
   const generate = useServerFn(generateRecipes);
   const fetchHistory = useServerFn(getRecipeHistory);
@@ -80,18 +79,17 @@ function Index() {
   const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null);
 
   const historyQuery = useQuery({
-    queryKey: ["recipe-history", deviceId],
-    queryFn: () => fetchHistory({ data: { deviceId: deviceId! } }),
-    enabled: !!deviceId,
+    queryKey: ["recipe-history"],
+    queryFn: () => fetchHistory(),
   });
 
   const mutation = useMutation({
     mutationFn: (vars: { ingredients: string; restrictions: string[] }) =>
-      generate({ data: { ...vars, deviceId: deviceId! } }),
+      generate({ data: vars }),
     onSuccess: (data) => {
       setView({ kind: "fresh", data });
       setSelectedHistoryId(null);
-      queryClient.invalidateQueries({ queryKey: ["recipe-history", deviceId] });
+      queryClient.invalidateQueries({ queryKey: ["recipe-history"] });
     },
   });
 
