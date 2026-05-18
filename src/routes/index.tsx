@@ -104,7 +104,7 @@ function Index() {
       );
       return;
     }
-    if (!deviceId) return;
+    
     setValidationError(null);
     mutation.mutate({ ingredients: ingredients.trim(), restrictions: selected });
   };
