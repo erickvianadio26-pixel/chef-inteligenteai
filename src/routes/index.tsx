@@ -304,8 +304,15 @@ function Index() {
             {/* Results Section */}
             <section className="mt-12">
               {mutation.isError && (
-                <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-5 py-4 text-sm text-destructive">
-                  {(mutation.error as Error)?.message || "Algo deu errado. Tente novamente."}
+                <div
+                  role="alert"
+                  className="flex items-start gap-3 rounded-2xl border border-destructive/30 bg-destructive/10 px-5 py-4 text-sm text-destructive"
+                >
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>
+                    {(mutation.error as Error)?.message ||
+                      "Falha na ligação. Por favor, tente novamente."}
+                  </span>
                 </div>
               )}
 
