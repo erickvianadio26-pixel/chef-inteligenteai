@@ -1,13 +1,58 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeader, setResponseHeader } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const DEVICE_ID_RE = /^[a-zA-Z0-9-]{8,64}$/;
+const DEVICE_COOKIE = "chef_did";
+const DEVICE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
+
+/**
+ * User-facing error. Message is safe to display in the UI.
+ * Anything else thrown is logged server-side and replaced with a generic message.
+ */
+class PublicError extends Error {
+  readonly isPublic = true as const;
+}
+
+const GENERIC_ERROR = "Não conseguimos preparar suas receitas agora. Tente novamente em instantes.";
+
+function withSanitizedErrors<T>(label: string, fn: () => Promise<T>): Promise<T> {
+  return fn().catch((err) => {
+    if (err instanceof PublicError) throw new Error(err.message);
+    console.error(`[${label}]`, err);
+    throw new Error(GENERIC_ERROR);
+  });
+}
+
+/**
+ * Reads the device id from an HttpOnly cookie set by the server. If absent
+ * or malformed, mints a new one and sets the cookie on the response so the
+ * caller is bound to a server-issued identity going forward.
+ *
+ * This replaces the previous client-supplied `deviceId` parameter so an
+ * attacker cannot spoof another user's id by guessing or replaying it.
+ */
+function getOrCreateDeviceId(): string {
+  const cookieHeader = getRequestHeader("cookie") ?? "";
+  for (const part of cookieHeader.split(/;\s*/)) {
+    const [name, ...rest] = part.split("=");
+    if (name === DEVICE_COOKIE) {
+      const value = decodeURIComponent(rest.join("="));
+      if (DEVICE_ID_RE.test(value)) return value;
+    }
+  }
+  const fresh = crypto.randomUUID();
+  setResponseHeader(
+    "set-cookie",
+    `${DEVICE_COOKIE}=${fresh}; Path=/; Max-Age=${DEVICE_COOKIE_MAX_AGE}; HttpOnly; Secure; SameSite=Lax`,
+  );
+  return fresh;
+}
 
 const InputSchema = z.object({
   ingredients: z.string().min(2).max(2000),
   restrictions: z.array(z.string().max(40)).max(10).default([]),
-  deviceId: z.string().regex(DEVICE_ID_RE),
 });
 
 const RecipeSchema = z.object({
@@ -67,94 +112,97 @@ Formato de saída OBRIGATÓRIO: responda APENAS com JSON válido em português d
 
 export const generateRecipes = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => InputSchema.parse(input))
-  .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY ausente.");
-
-    const restrictionsText =
-      data.restrictions.length > 0
-        ? `Restrições alimentares obrigatórias: ${data.restrictions.join(", ")}.`
-        : "Sem restrições alimentares.";
-
-    const userPrompt = `Ingredientes disponíveis informados pelo usuário: ${data.ingredients}\n${restrictionsText}`;
-
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userPrompt },
-        ],
-        response_format: { type: "json_object" },
-      }),
-    });
-
-    if (response.status === 429) {
-      throw new Error("Limite de requisições atingido. Tente novamente em instantes.");
-    }
-    if (response.status === 402) {
-      throw new Error("Créditos esgotados. Adicione créditos no Lovable AI.");
-    }
-    if (!response.ok) {
-      const text = await response.text();
-      console.error("AI gateway error:", response.status, text);
-      throw new Error("Falha ao gerar receitas. Tente novamente.");
-    }
-
-    const json = (await response.json()) as {
-      choices?: { message?: { content?: string } }[];
-    };
-    const content = json.choices?.[0]?.message?.content ?? "";
-
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(content);
-    } catch {
-      throw new Error("Resposta inválida do modelo.");
-    }
-
-    const validated = RecipeSchema.parse(parsed);
-
-    // Persist only when actual recipes were generated (skip refusals).
-    if (validated.recipes.length > 0) {
-      const { error: insertError } = await supabaseAdmin
-        .from("recipe_history")
-        .insert({
-          device_id: data.deviceId,
-          ingredients: data.ingredients,
-          restrictions: data.restrictions,
-          recipes: validated.recipes,
-          notice: validated.notice ?? null,
-          assumed_pantry: validated.assumedPantry ?? [],
-        });
-      if (insertError) {
-        console.error("Failed to save recipe history:", insertError);
+  .handler(async ({ data }) =>
+    withSanitizedErrors("generateRecipes", async () => {
+      const deviceId = getOrCreateDeviceId();
+      const apiKey = process.env.LOVABLE_API_KEY;
+      if (!apiKey) {
+        // Log internally; surface a generic message to the user.
+        console.error("[generateRecipes] Missing AI gateway credential");
+        throw new Error(GENERIC_ERROR);
       }
 
-      // Keep only the latest 5 per device.
-      const { data: extra } = await supabaseAdmin
-        .from("recipe_history")
-        .select("id")
-        .eq("device_id", data.deviceId)
-        .order("created_at", { ascending: false })
-        .range(5, 1000);
-      const idsToDelete = (extra ?? []).map((r) => r.id);
-      if (idsToDelete.length > 0) {
-        await supabaseAdmin.from("recipe_history").delete().in("id", idsToDelete);
+      const restrictionsText =
+        data.restrictions.length > 0
+          ? `Restrições alimentares obrigatórias: ${data.restrictions.join(", ")}.`
+          : "Sem restrições alimentares.";
+
+      const userPrompt = `Ingredientes disponíveis informados pelo usuário: ${data.ingredients}\n${restrictionsText}`;
+
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userPrompt },
+          ],
+          response_format: { type: "json_object" },
+        }),
+      });
+
+      if (response.status === 429) {
+        throw new PublicError("Muitas receitas pedidas de uma vez. Aguarde alguns instantes e tente novamente.");
       }
-    }
+      if (response.status === 402) {
+        throw new PublicError("O serviço de receitas está temporariamente indisponível. Tente novamente mais tarde.");
+      }
+      if (!response.ok) {
+        const text = await response.text().catch(() => "");
+        console.error("[generateRecipes] AI gateway error", response.status, text);
+        throw new Error(GENERIC_ERROR);
+      }
 
-    return validated;
-  });
+      const json = (await response.json()) as {
+        choices?: { message?: { content?: string } }[];
+      };
+      const content = json.choices?.[0]?.message?.content ?? "";
 
-const HistoryInputSchema = z.object({
-  deviceId: z.string().regex(DEVICE_ID_RE),
-});
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(content);
+      } catch {
+        throw new PublicError("Não conseguimos interpretar a resposta do Chef. Tente novamente.");
+      }
+
+      const validated = RecipeSchema.parse(parsed);
+
+      // Persist only when actual recipes were generated (skip refusals).
+      if (validated.recipes.length > 0) {
+        const { error: insertError } = await supabaseAdmin
+          .from("recipe_history")
+          .insert({
+            device_id: deviceId,
+            ingredients: data.ingredients,
+            restrictions: data.restrictions,
+            recipes: validated.recipes,
+            notice: validated.notice ?? null,
+            assumed_pantry: validated.assumedPantry ?? [],
+          });
+        if (insertError) {
+          console.error("[generateRecipes] Failed to save recipe history:", insertError);
+        }
+
+        // Keep only the latest 5 per device.
+        const { data: extra } = await supabaseAdmin
+          .from("recipe_history")
+          .select("id")
+          .eq("device_id", deviceId)
+          .order("created_at", { ascending: false })
+          .range(5, 1000);
+        const idsToDelete = (extra ?? []).map((r) => r.id);
+        if (idsToDelete.length > 0) {
+          await supabaseAdmin.from("recipe_history").delete().in("id", idsToDelete);
+        }
+      }
+
+      return validated;
+    }),
+  );
 
 export type HistoryEntry = {
   id: string;
@@ -167,27 +215,29 @@ export type HistoryEntry = {
 };
 
 export const getRecipeHistory = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => HistoryInputSchema.parse(input))
-  .handler(async ({ data }): Promise<HistoryEntry[]> => {
-    const { data: rows, error } = await supabaseAdmin
-      .from("recipe_history")
-      .select("id, ingredients, restrictions, recipes, notice, assumed_pantry, created_at")
-      .eq("device_id", data.deviceId)
-      .order("created_at", { ascending: false })
-      .limit(5);
+  .handler(async (): Promise<HistoryEntry[]> =>
+    withSanitizedErrors("getRecipeHistory", async () => {
+      const deviceId = getOrCreateDeviceId();
+      const { data: rows, error } = await supabaseAdmin
+        .from("recipe_history")
+        .select("id, ingredients, restrictions, recipes, notice, assumed_pantry, created_at")
+        .eq("device_id", deviceId)
+        .order("created_at", { ascending: false })
+        .limit(5);
 
-    if (error) {
-      console.error("Failed to load history:", error);
-      return [];
-    }
+      if (error) {
+        console.error("[getRecipeHistory] Failed to load history:", error);
+        return [];
+      }
 
-    return (rows ?? []).map((r) => ({
-      id: r.id as string,
-      ingredients: r.ingredients as string,
-      restrictions: (r.restrictions as string[]) ?? [],
-      recipes: (r.recipes as Recipe[]) ?? [],
-      notice: (r.notice as string | null) ?? null,
-      assumedPantry: (r.assumed_pantry as string[]) ?? [],
-      createdAt: r.created_at as string,
-    }));
-  });
+      return (rows ?? []).map((r) => ({
+        id: r.id as string,
+        ingredients: r.ingredients as string,
+        restrictions: (r.restrictions as string[]) ?? [],
+        recipes: (r.recipes as Recipe[]) ?? [],
+        notice: (r.notice as string | null) ?? null,
+        assumedPantry: (r.assumed_pantry as string[]) ?? [],
+        createdAt: r.created_at as string,
+      }));
+    }),
+  );
