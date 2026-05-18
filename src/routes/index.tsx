@@ -84,8 +84,30 @@ function Index() {
   });
 
   const mutation = useMutation({
-    mutationFn: (vars: { ingredients: string; restrictions: string[] }) =>
-      generate({ data: vars }),
+    mutationFn: async (vars: { ingredients: string; restrictions: string[] }) => {
+      const TIMEOUT_MS = 30_000;
+      let timeoutId: ReturnType<typeof setTimeout> | undefined;
+      const timeout = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(
+          () =>
+            reject(
+              new Error(
+                "A ligação demorou muito tempo a responder. Por favor, tente novamente.",
+              ),
+            ),
+          TIMEOUT_MS,
+        );
+      });
+      try {
+        return await Promise.race([generate({ data: vars }), timeout]);
+      } catch (err) {
+        if (err instanceof Error) throw err;
+        throw new Error("Falha na ligação. Por favor, tente novamente.");
+      } finally {
+        if (timeoutId) clearTimeout(timeoutId);
+      }
+    },
+    retry: false,
     onSuccess: (data) => {
       setView({ kind: "fresh", data });
       setSelectedHistoryId(null);
@@ -282,8 +304,15 @@ function Index() {
             {/* Results Section */}
             <section className="mt-12">
               {mutation.isError && (
-                <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-5 py-4 text-sm text-destructive">
-                  {(mutation.error as Error)?.message || "Algo deu errado. Tente novamente."}
+                <div
+                  role="alert"
+                  className="flex items-start gap-3 rounded-2xl border border-destructive/30 bg-destructive/10 px-5 py-4 text-sm text-destructive"
+                >
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>
+                    {(mutation.error as Error)?.message ||
+                      "Falha na ligação. Por favor, tente novamente."}
+                  </span>
                 </div>
               )}
 
