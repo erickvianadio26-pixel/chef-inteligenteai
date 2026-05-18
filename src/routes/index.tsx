@@ -84,8 +84,30 @@ function Index() {
   });
 
   const mutation = useMutation({
-    mutationFn: (vars: { ingredients: string; restrictions: string[] }) =>
-      generate({ data: vars }),
+    mutationFn: async (vars: { ingredients: string; restrictions: string[] }) => {
+      const TIMEOUT_MS = 30_000;
+      let timeoutId: ReturnType<typeof setTimeout> | undefined;
+      const timeout = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(
+          () =>
+            reject(
+              new Error(
+                "A ligação demorou muito tempo a responder. Por favor, tente novamente.",
+              ),
+            ),
+          TIMEOUT_MS,
+        );
+      });
+      try {
+        return await Promise.race([generate({ data: vars }), timeout]);
+      } catch (err) {
+        if (err instanceof Error) throw err;
+        throw new Error("Falha na ligação. Por favor, tente novamente.");
+      } finally {
+        if (timeoutId) clearTimeout(timeoutId);
+      }
+    },
+    retry: false,
     onSuccess: (data) => {
       setView({ kind: "fresh", data });
       setSelectedHistoryId(null);
