@@ -260,7 +260,7 @@ function Index() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                disabled={mutation.isPending || !deviceId}
+                disabled={mutation.isPending}
                 aria-busy={mutation.isPending}
                 className="mt-8 h-14 w-full rounded-[1.5rem] bg-[var(--tomato)] text-lg font-bold text-white shadow-xl shadow-[var(--tomato)]/20 transition-all hover:bg-[var(--tomato)] hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
               >
