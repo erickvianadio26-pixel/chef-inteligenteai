@@ -228,7 +228,10 @@ function Index() {
                   id="ingredients"
                   value={ingredients}
                   onChange={(e) => {
-                    setIngredients(e.target.value);
+                    const val = e.target.value;
+                    const words = val.trim().split(/\s+/).filter(Boolean).length;
+                    setIngredients(val);
+                    setWordCount(words);
                     if (validationError) setValidationError(null);
                   }}
                   placeholder="2 tomates, cebola, alho, frango, arroz, manjericão fresco..."
