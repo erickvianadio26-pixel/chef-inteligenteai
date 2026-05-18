@@ -245,6 +245,17 @@ function Index() {
                 />
               </div>
 
+              <div className="mt-2 flex items-center justify-between px-1">
+                <p className="text-xs text-muted-foreground">
+                  {wordCount} / {MAX_WORDS} palavras
+                </p>
+                {wordCount > MAX_WORDS && (
+                  <p className="text-xs font-semibold text-destructive">
+                    Limite de palavras excedido
+                  </p>
+                )}
+              </div>
+
               {validationError && (
                 <div
                   id="ingredients-error"
