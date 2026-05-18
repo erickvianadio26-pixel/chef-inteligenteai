@@ -283,7 +283,7 @@ function Index() {
             <section className="mt-12">
               {mutation.isError && (
                 <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-5 py-4 text-sm text-destructive">
-                  {(mutation.error as Error)?.message ?? "Algo deu errado."}
+                  {(mutation.error as Error)?.message || "Algo deu errado. Tente novamente."}
                 </div>
               )}
 
